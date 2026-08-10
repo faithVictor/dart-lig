@@ -1,0 +1,69 @@
+:root{
+  --bg:#f7f6f2; --card:#ffffff; --text:#1f1f1d; --muted:#6b6a63;
+  --accent:#b3441e; --accent-2:#0f6e56; --border:#e2e0d6;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:-apple-system,Segoe UI,Roboto,sans-serif;
+  background:var(--bg); color:var(--text); padding-bottom:40px;
+}
+header{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:16px 20px; background:var(--card); border-bottom:1px solid var(--border);
+}
+header h1{font-size:20px; margin:0}
+.link-btn{background:none; border:none; color:var(--accent); font-size:14px; cursor:pointer}
+
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:12px;
+  padding:18px; margin:14px 16px; max-width:480px;
+}
+h2{font-size:16px; margin:0 0 12px}
+.hint{font-size:13px; color:var(--muted); line-height:1.5}
+
+label{display:block; font-size:13px; color:var(--muted); margin-bottom:12px}
+input, select{
+  display:block; width:100%; padding:10px; margin-top:4px;
+  border:1px solid var(--border); border-radius:8px; font-size:15px; background:#fff;
+}
+button{
+  padding:10px 16px; border-radius:8px; border:1px solid var(--border);
+  background:var(--text); color:#fff; font-size:14px; cursor:pointer;
+}
+button.active{background:var(--accent); border-color:var(--accent)}
+.row{display:flex; gap:8px; margin-top:8px; flex-wrap:wrap}
+.row input{flex:1}
+
+.tabs{display:flex; gap:6px; padding:12px 16px}
+.tab-btn{background:#efece2; color:var(--text); border:none; flex:1}
+.tab-btn.active{background:var(--text); color:#fff}
+
+.list{list-style:none; padding:0; margin:0}
+.list li{
+  display:flex; justify-content:space-between; padding:10px 0;
+  border-bottom:1px solid var(--border); font-size:14px;
+}
+.list li:last-child{border-bottom:none}
+
+.skor-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px}
+.skor-kart{background:var(--bg); border-radius:10px; padding:14px; text-align:center}
+.oyuncu-isim{font-size:13px; color:var(--muted)}
+.skor{font-size:32px; font-weight:600; margin:4px 0}
+.sira-etiketi{font-size:12px; color:var(--accent-2); height:16px}
+
+.dart-noktalari{display:flex; justify-content:center; gap:8px; margin-bottom:14px}
+.dart-nokta{width:10px; height:10px; border-radius:50%; background:var(--border)}
+.dart-nokta.dolu{background:var(--accent)}
+
+.carpan-satiri button{flex:1}
+.carpan-btn.active{background:var(--accent-2); border-color:var(--accent-2)}
+
+.numpad{
+  display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin:10px 0;
+}
+.numpad button{background:#efece2; color:var(--text); padding:12px 0}
+
+table{width:100%; border-collapse:collapse; margin-top:10px}
+th,td{text-align:left; padding:8px 4px; border-bottom:1px solid var(--border); font-size:14px}
+
+.donem-btn{flex:1}

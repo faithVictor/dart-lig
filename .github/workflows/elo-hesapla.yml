@@ -1,0 +1,43 @@
+name: ELO Hesapla
+
+on:
+  issues:
+    types: [opened]
+
+# Aynı anda birden fazla maç girilirse, ELO güncellemelerinin
+# birbirini ezmemesi için işlemleri sıraya sokuyoruz.
+concurrency:
+  group: elo-hesaplama
+  cancel-in-progress: false
+
+permissions:
+  issues: write
+  contents: write
+
+jobs:
+  hesapla:
+    if: contains(github.event.issue.labels.*.name, 'mac')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Depoyu çek
+        uses: actions/checkout@v4
+
+      - name: Node.js kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: ELO hesapla ve dosyaları güncelle
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: node .github/scripts/elo_hesapla.js
+
+      - name: Değişiklikleri commitle
+        run: |
+          git config user.name "dart-lig-bot"
+          git config user.email "actions@github.com"
+          git add data/
+          git diff --staged --quiet || git commit -m "ELO güncelle: issue #${{ github.event.issue.number }}"
+          git push

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dart Lig</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header>
+  <h1>🎯 Dart Lig</h1>
+  <button id="ayarlarBtn" class="link-btn">Ayarlar</button>
+</header>
+
+<!-- YAPILANDIRMA EKRANI -->
+<section id="config-screen" class="card">
+  <h2>Lig bağlantısı</h2>
+  <p class="hint">Bu lig için oluşturulmuş GitHub deposunun bilgilerini gir. Token, sadece bu depoda issue açma/düzenleme izni olan bir "fine-grained personal access token" olmalı.</p>
+  <label>GitHub kullanıcı adı / organizasyon
+    <input id="cfgOwner" type="text" placeholder="orn: faith-dev">
+  </label>
+  <label>Depo adı
+    <input id="cfgRepo" type="text" placeholder="orn: cuma-dart-ligi">
+  </label>
+  <label>Personal Access Token
+    <input id="cfgToken" type="password" placeholder="github_pat_...">
+  </label>
+  <button id="cfgKaydet">Bağlan ve kaydet</button>
+</section>
+
+<!-- ANA UYGULAMA -->
+<main id="app" hidden>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="oyuncular">Oyuncular</button>
+    <button class="tab-btn" data-tab="mac">Yeni maç</button>
+    <button class="tab-btn" data-tab="lider">Lider tablosu</button>
+  </nav>
+
+  <!-- OYUNCULAR -->
+  <section id="tab-oyuncular" class="tab-panel">
+    <div class="card">
+      <h2>Oyuncu ekle</h2>
+      <div class="row">
+        <input id="yeniOyuncuIsim" type="text" placeholder="Oyuncu ismi">
+        <button id="oyuncuEkleBtn">Ekle</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Oyuncular</h2>
+      <ul id="oyuncuListesi" class="list"></ul>
+    </div>
+  </section>
+
+  <!-- YENİ MAÇ -->
+  <section id="tab-mac" class="tab-panel" hidden>
+    <div class="card" id="macKurulum">
+      <h2>Maçı kur</h2>
+      <label>Oyuncu 1
+        <select id="secOyuncu1"></select>
+      </label>
+      <label>Oyuncu 2
+        <select id="secOyuncu2"></select>
+      </label>
+      <label>Turnuva tipi
+        <select id="secTurnuvaTipi">
+          <option value="haftalik">Haftalık</option>
+          <option value="aylik">Aylık final</option>
+          <option value="senelik">Senelik final</option>
+        </select>
+      </label>
+      <label>Başlangıç skoru
+        <select id="secBaslangicSkor">
+          <option value="501">501</option>
+          <option value="301">301</option>
+        </select>
+      </label>
+      <button id="macBaslatBtn">Maçı başlat</button>
+    </div>
+
+    <div class="card" id="oyunEkrani" hidden>
+      <div class="skor-grid">
+        <div class="skor-kart" id="p1kart">
+          <div class="oyuncu-isim" id="p1isim"></div>
+          <div class="skor" id="p1skor"></div>
+          <div class="sira-etiketi" id="p1sira"></div>
+        </div>
+        <div class="skor-kart" id="p2kart">
+          <div class="oyuncu-isim" id="p2isim"></div>
+          <div class="skor" id="p2skor"></div>
+          <div class="sira-etiketi" id="p2sira"></div>
+        </div>
+      </div>
+
+      <div class="dart-noktalari" id="dartNoktalari"></div>
+
+      <div class="row carpan-satiri">
+        <button class="carpan-btn active" data-carpan="1">Tekli</button>
+        <button class="carpan-btn" data-carpan="2">Duble</button>
+        <button class="carpan-btn" data-carpan="3">Triple</button>
+      </div>
+
+      <div class="numpad" id="numpad"></div>
+
+      <div class="row">
+        <button id="geriAlBtn">↩ Son atışı geri al</button>
+      </div>
+
+      <p id="macLog" class="hint"></p>
+    </div>
+  </section>
+
+  <!-- LİDER TABLOSU -->
+  <section id="tab-lider" class="tab-panel" hidden>
+    <div class="card">
+      <div class="row">
+        <button class="donem-btn active" data-donem="hafta">Bu hafta</button>
+        <button class="donem-btn" data-donem="ay">Bu ay</button>
+        <button class="donem-btn" data-donem="yil">Bu yıl</button>
+      </div>
+      <table id="liderTablo">
+        <thead><tr><th>#</th><th>Oyuncu</th><th>Puan</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <p class="hint">Bu tablo, GitHub Actions tarafından her maç sonrası otomatik güncellenen data/lider_tablosu.json dosyasından okunur. Maçtan hemen sonra 10-30 saniye gecikme olabilir (Action çalışma süresi).</p>
+    </div>
+  </section>
+
+</main>
+
+<script src="assets/dart-game.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
