@@ -10,56 +10,29 @@
 
 <header>
   <h1>🎯 Dart Lig</h1>
-  <button id="ayarlarBtn" class="link-btn">Ayarlar</button>
+  <button id="ayarlarBtn" class="link-btn">Bağlantıyı sıfırla</button>
 </header>
 
 <!-- YAPILANDIRMA EKRANI -->
 <section id="config-screen" class="card">
-  <h2>Yeni lig aç</h2>
+  <h2>Dart Lig'e bağlan</h2>
+  <p class="hint">
+    Bu, sadece bu cihazda <strong>bir kere</strong> yapılır. Bağlandıktan
+    sonra bu ekranı bir daha görmezsin — sadece oyuncu ismi seçip maça
+    geçersin.
+  </p>
 
-  <details open>
-    <summary><strong>🚀 Otomatik kurulum</strong> (önerilen)</summary>
-    <p class="hint">
-      Bu, tek seferlik ve geniş yetkili bir "kurulum token'ı" kullanır
-      (repo oluşturma, Pages açma, Actions izni ayarlama). İşlem bitince
-      bu token'ı GitHub'dan silmen önerilir — günlük kullanımda buna
-      ihtiyacın olmayacak.
-    </p>
-    <label>GitHub kullanıcı adı / organizasyon
-      <input id="setupOwner" type="text" placeholder="orn: faithVictor">
-    </label>
-    <label>Yeni lig deposunun adı
-      <input id="setupRepoAdi" type="text" placeholder="orn: cuma-dart-ligi">
-    </label>
-    <button id="setupTokenLinkBtn" type="button" disabled>1) Kurulum token'ı oluştur (GitHub'da açılır)</button>
-    <label style="margin-top:10px">Kurulum token'ını buraya yapıştır
-      <input id="setupToken" type="password" placeholder="github_pat_...">
-    </label>
-    <button id="otomatikKurBtn" type="button">2) Ligi otomatik oluştur</button>
-    <p id="setupLog" class="hint"></p>
-  </details>
-
-  <details style="margin-top:14px">
-    <summary><strong>Elle kurulum</strong> (alternatif)</summary>
-    <p class="hint">1) Şablondan kendi deponu elle oluştur.</p>
-    <button id="templateBtn" type="button">Kendi lig deponu oluştur (GitHub'da açılır)</button>
-    <p class="hint" style="margin-top:10px">2) Reponda Settings → Pages ve Settings → Actions → Workflow permissions'ı elle aç.</p>
-  </details>
-
-  <p class="hint" style="margin-top:16px">3) Günlük kullanım için depo bilgilerini gir.</p>
-  <label>GitHub kullanıcı adı / organizasyon
-    <input id="cfgOwner" type="text" placeholder="orn: faith-dev">
-  </label>
-  <label>Depo adı
-    <input id="cfgRepo" type="text" placeholder="orn: cuma-dart-ligi">
-  </label>
-
-  <p class="hint" style="margin-top:16px">4) Bu depoya özel, dar yetkili günlük token oluştur.</p>
-  <button id="tokenLinkBtn" type="button" disabled>Dar yetkili token oluştur (GitHub'da açılır)</button>
-  <label style="margin-top:10px">Oluşturduğun token'ı buraya yapıştır
+  <button id="tokenLinkBtn" type="button">1) Bağlantı izni oluştur (GitHub'da açılır)</button>
+  <label style="margin-top:10px">2) Oluşan kodu buraya yapıştır
     <input id="cfgToken" type="password" placeholder="github_pat_...">
   </label>
-  <button id="cfgKaydet">Bağlan ve kaydet</button>
+  <button id="cfgKaydet">Bağlan</button>
+  <p class="hint" style="margin-top:10px">
+    Not: GitHub, tarayıcı üzerinden çalışan uygulamaların bu izni tamamen
+    görünmeden (tıklamadan) almasına izin vermiyor — bu yüzden tek bir
+    buton + yapıştır adımı gerekiyor. Bu, ayrı bir sunucu kurmadan
+    yapabileceğimizin en kısa hali.
+  </p>
 </section>
 
 <!-- ANA UYGULAMA -->

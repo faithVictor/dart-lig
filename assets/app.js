@@ -2,9 +2,10 @@
 // AYARLAR / YAPILANDIRMA
 // ============================================
 
-// Bu şablon deposunu kendi hesabına push ettikten sonra burayı güncelle:
-// örn 'faith-dev/dart-lig-sablon'. "Use this template" linki bu değeri kullanır.
-const TEMPLATE_REPO = 'faithvictor/dart-lig';
+// Bu ligin sabit deposu — her yeni lig için bu iki değeri değiştirip
+// dosyaları kendi reponla değiştirmen yeterli.
+const LIG_OWNER = 'faithvictor';
+const LIG_REPO = 'dart-lig';
 
 const CFG_KEY = 'dartlig_config';
 
@@ -16,8 +17,8 @@ function cfgKaydet(cfg) { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); }
 
 let CFG = cfgYukle();
 
-function apiBase() { return `https://api.github.com/repos/${CFG.owner}/${CFG.repo}`; }
-function rawBase() { return `https://raw.githubusercontent.com/${CFG.owner}/${CFG.repo}/main`; }
+function apiBase() { return `https://api.github.com/repos/${LIG_OWNER}/${LIG_REPO}`; }
+function rawBase() { return `https://raw.githubusercontent.com/${LIG_OWNER}/${LIG_REPO}/main`; }
 
 async function ghFetch(path, opts = {}) {
   const res = await fetch(apiBase() + path, {
@@ -139,7 +140,7 @@ function donemAnahtariYil(d = new Date()) { return String(d.getFullYear()); }
 const el = (id) => document.getElementById(id);
 
 function ekranlariAyarla() {
-  if (CFG && CFG.owner && CFG.repo && CFG.token) {
+  if (CFG && CFG.token) {
     el('config-screen').hidden = true;
     el('app').hidden = false;
     oyuncuListesiniYenile();
@@ -150,123 +151,23 @@ function ekranlariAyarla() {
   }
 }
 
-// --- Kolay kurulum: şablon linki ve önceden izinli token linki ---
-el('templateBtn').addEventListener('click', () => {
-  window.open(`https://github.com/${TEMPLATE_REPO}/generate`, '_blank');
-});
-
-function tokenOlusturmaLinkiUret(owner, repoAdi, ekIzinler = {}) {
+// --- Bağlantı: tek buton (izinleri hazır token linki) + yapıştır ---
+el('tokenLinkBtn').addEventListener('click', () => {
   const params = new URLSearchParams({
-    name: `Dart Lig${repoAdi ? ' - ' + repoAdi : ''}`,
+    name: `Dart Lig - ${LIG_REPO}`,
     description: 'Dart lig uygulamasının erişimi',
-    target_name: owner,
+    target_name: LIG_OWNER,
     expires_in: '366',
     issues: 'write',
     contents: 'write',
-    ...ekIzinler,
-  });
-  return `https://github.com/settings/personal-access-tokens/new?${params.toString()}`;
-}
-
-el('cfgOwner').addEventListener('input', () => {
-  el('tokenLinkBtn').disabled = !el('cfgOwner').value.trim();
-});
-el('tokenLinkBtn').addEventListener('click', () => {
-  const owner = el('cfgOwner').value.trim();
-  if (!owner) return;
-  window.open(tokenOlusturmaLinkiUret(owner, el('cfgRepo').value.trim()), '_blank');
-});
-
-// --- Otomatik kurulum: repo oluştur + Pages aç + Actions izinlerini ayarla ---
-// Bu, geniş yetkili (Administration: write, "All repositories") bir
-// "kurulum token'ı" gerektirir. İşlem bitince bu token silinebilir.
-el('setupOwner').addEventListener('input', () => {
-  el('setupTokenLinkBtn').disabled = !el('setupOwner').value.trim();
-});
-
-el('setupTokenLinkBtn').addEventListener('click', () => {
-  const owner = el('setupOwner').value.trim();
-  if (!owner) return;
-  const params = new URLSearchParams({
-    name: 'Dart Lig - Kurulum (tek kullanımlık)',
-    description: 'Yeni lig deposu oluşturmak için tek seferlik token. Kullanımdan sonra silinebilir.',
-    target_name: owner,
-    expires_in: '1',
-    administration: 'write',
-    contents: 'write',
-    pages: 'write',
   });
   window.open(`https://github.com/settings/personal-access-tokens/new?${params.toString()}`, '_blank');
 });
 
-async function ghApiCagir(url, token, opts = {}) {
-  const res = await fetch(url, {
-    ...opts,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/vnd.github+json',
-      'Content-Type': 'application/json',
-      ...(opts.headers || {}),
-    },
-  });
-  if (!res.ok) throw new Error(`${res.status}: ${await res.text()}`);
-  return res.status === 204 ? null : res.json();
-}
-
-function bekle(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-el('otomatikKurBtn').addEventListener('click', async () => {
-  const owner = el('setupOwner').value.trim();
-  const repoAdi = el('setupRepoAdi').value.trim();
-  const setupToken = el('setupToken').value.trim();
-  const log = el('setupLog');
-
-  if (!owner || !repoAdi || !setupToken) {
-    log.textContent = 'Kullanıcı adı, repo adı ve kurulum token\'ı gerekli.';
-    return;
-  }
-
-  el('otomatikKurBtn').disabled = true;
-  try {
-    log.textContent = '1/3 — Şablondan repo oluşturuluyor…';
-    await ghApiCagir(`https://api.github.com/repos/${TEMPLATE_REPO}/generate`, setupToken, {
-      method: 'POST',
-      body: JSON.stringify({ owner, name: repoAdi, private: false, include_all_branches: false }),
-    });
-
-    log.textContent = 'Repo hazırlanıyor, birkaç saniye bekleniyor…';
-    await bekle(4000);
-
-    log.textContent = '2/3 — GitHub Pages açılıyor…';
-    await ghApiCagir(`https://api.github.com/repos/${owner}/${repoAdi}/pages`, setupToken, {
-      method: 'POST',
-      body: JSON.stringify({ build_type: 'legacy', source: { branch: 'main', path: '/' } }),
-    }).catch(() => { /* Pages zaten açıksa veya repo tam hazır değilse burada hata dönebilir, devam et */ });
-
-    log.textContent = '3/3 — Actions izinleri ayarlanıyor…';
-    await ghApiCagir(`https://api.github.com/repos/${owner}/${repoAdi}/actions/permissions/workflow`, setupToken, {
-      method: 'PUT',
-      body: JSON.stringify({ default_workflow_permissions: 'write', can_approve_pull_request_reviews: false }),
-    });
-
-    el('cfgOwner').value = owner;
-    el('cfgRepo').value = repoAdi;
-    el('tokenLinkBtn').disabled = false;
-    log.textContent = `✅ Hazır! ${owner}/${repoAdi} oluşturuldu. Kurulum token'ını GitHub'dan silebilirsin. Şimdi 4. adımdan günlük token'ı oluştur.`;
-  } catch (e) {
-    log.textContent = `Hata: ${e.message} — Pages veya Actions adımı yarıda kalmış olabilir, reponun Settings sayfasından elle kontrol edebilirsin.`;
-  } finally {
-    el('otomatikKurBtn').disabled = false;
-  }
-});
-
 el('cfgKaydet').addEventListener('click', () => {
-  CFG = {
-    owner: el('cfgOwner').value.trim(),
-    repo: el('cfgRepo').value.trim(),
-    token: el('cfgToken').value.trim(),
-  };
-  if (!CFG.owner || !CFG.repo || !CFG.token) { alert('Tüm alanları doldur.'); return; }
+  const token = el('cfgToken').value.trim();
+  if (!token) { alert('Önce token\'ı yapıştır.'); return; }
+  CFG = { token };
   cfgKaydet(CFG);
   ekranlariAyarla();
 });
@@ -274,10 +175,6 @@ el('cfgKaydet').addEventListener('click', () => {
 el('ayarlarBtn').addEventListener('click', () => {
   el('config-screen').hidden = false;
   el('app').hidden = true;
-  if (CFG) {
-    el('cfgOwner').value = CFG.owner;
-    el('cfgRepo').value = CFG.repo;
-  }
 });
 
 // --- Sekmeler ---
