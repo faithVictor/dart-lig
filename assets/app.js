@@ -4,7 +4,7 @@
 
 // Bu şablon deposunu kendi hesabına push ettikten sonra burayı güncelle:
 // örn 'faith-dev/dart-lig-sablon'. "Use this template" linki bu değeri kullanır.
-const TEMPLATE_REPO = 'DEPO_SAHIBI/dart-lig-sablon';
+const TEMPLATE_REPO = 'faithvictor/dart-lig';
 
 const CFG_KEY = 'dartlig_config';
 
