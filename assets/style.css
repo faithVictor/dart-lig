@@ -66,4 +66,5 @@ button.active{background:var(--accent); border-color:var(--accent)}
 table{width:100%; border-collapse:collapse; margin-top:10px}
 th,td{text-align:left; padding:8px 4px; border-bottom:1px solid var(--border); font-size:14px}
 
-.donem-btn{flex:1}
+details{margin:10px 0}
+summary{cursor:pointer; font-size:14px; padding:6px 0}
