@@ -13,25 +13,35 @@ depo oluşturman yeterli.
 
 ## Kurulum
 
-1. **Depoyu oluştur**: Bu dosyaları kendi GitHub deponuza push edin (repo
-   public olmalı — Issues API'sinin token'sız okunmasına gerek yoksa private
-   de olabilir, ama Pages ve raw dosya erişimi için public daha basittir).
+### Bir kere yapılacaklar (sen — şablonu yayınlayan kişi)
 
-2. **GitHub Pages'i aç**: Repo → Settings → Pages → Source: `main` dalı,
-   `/ (root)` klasörü.
+1. Bu dosyaları kendi GitHub hesabına push et, örn. `dart-lig-sablon` adıyla
+   public bir repo olarak.
+2. Repo → Settings → **Template repository** kutucuğunu işaretle. Bu,
+   herkesin "Use this template" ile kendi kopyasını tek tıkla
+   oluşturabilmesini sağlar.
+3. `assets/app.js` içindeki `TEMPLATE_REPO` sabitini kendi
+   `kullanici-adi/dart-lig-sablon` değerinle güncelle, tekrar push et.
 
-3. **Actions izinlerini ayarla**: Repo → Settings → Actions → General →
-   "Workflow permissions" → **Read and write permissions** seçili olmalı.
-   Aksi halde ELO hesaplama Action'ı Issue düzenleyemez / commit atamaz.
+### Her yeni lig için (kullanıcı — uygulamayı ilk açan kişi)
 
-4. **Erişim token'ı oluştur**: GitHub → Settings → Developer settings →
-   Fine-grained personal access tokens → sadece bu repo için,
-   **Issues: Read and write** izniyle bir token üret. Bu token, uygulamanın
-   "Ayarlar" ekranına girilecek (tarayıcıda saklanır, sadece bu depoya
-   issue açabilir — başka hiçbir yetkisi yoktur).
+Uygulamanın "Ayarlar" ekranındaki 3 adım bunu otomatikleştiriyor, ama
+perde arkasında olan şey şu:
 
-5. **Uygulamayı aç**: `https://<kullanici-adin>.github.io/<repo-adi>/`
-   adresine gidip Ayarlar'dan kullanıcı adı / repo adı / token'ı gir.
+1. **"Kendi lig deponu oluştur" butonu** → `https://github.com/<şablon>/generate`
+   adresini açar, GitHub bir tık ile senin hesabında yeni bir repo oluşturur
+   (dosya kopyalama, git clone/push gerekmez).
+2. Yeni oluşan reponda **Settings → Pages → Source: `main` / `root`**
+   ayarını manuel açman gerekiyor (bu adım GitHub API ile otomatikleştirilemiyor).
+3. **Settings → Actions → General → Workflow permissions → Read and write
+   permissions** seçili olmalı — aksi halde ELO Action'ı issue
+   düzenleyemez / commit atamaz.
+4. **"İzinleri hazır token oluştur" butonu** → GitHub'ın token oluşturma
+   sayfasını, `target_name` (kullanıcı adın) ve `issues=write&contents=write`
+   izinleri **önceden doldurulmuş** olarak açar. Sen sadece "Only select
+   repositories" kutucuğundan reponu seçip "Generate token"a basıyorsun —
+   izin listesinde tek tek arama derdi kalmıyor.
+5. Oluşan token'ı uygulamaya yapıştırıp "Bağlan ve kaydet"e basman yeterli.
 
 ## Nasıl çalışıyor
 

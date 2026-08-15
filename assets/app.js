@@ -1,6 +1,11 @@
 // ============================================
 // AYARLAR / YAPILANDIRMA
 // ============================================
+
+// Bu şablon deposunu kendi hesabına push ettikten sonra burayı güncelle:
+// örn 'faith-dev/dart-lig-sablon'. "Use this template" linki bu değeri kullanır.
+const TEMPLATE_REPO = 'DEPO_SAHIBI/dart-lig-sablon';
+
 const CFG_KEY = 'dartlig_config';
 
 function cfgYukle() {
@@ -145,6 +150,35 @@ function ekranlariAyarla() {
   }
 }
 
+// --- Kolay kurulum: şablon linki ve önceden izinli token linki ---
+el('templateBtn').addEventListener('click', () => {
+  window.open(`https://github.com/${TEMPLATE_REPO}/generate`, '_blank');
+});
+
+function tokenOlusturmaLinkiUret(owner, repoAdi) {
+  const params = new URLSearchParams({
+    name: `Dart Lig${repoAdi ? ' - ' + repoAdi : ''}`,
+    description: 'Dart lig uygulamasının issue oluşturma/güncelleme erişimi',
+    target_name: owner,
+    expires_in: '366',
+    issues: 'write',
+    contents: 'write',
+  });
+  return `https://github.com/settings/personal-access-tokens/new?${params.toString()}`;
+}
+
+el('cfgOwner').addEventListener('input', () => {
+  const owner = el('cfgOwner').value.trim();
+  el('tokenLinkBtn').disabled = !owner;
+});
+
+el('tokenLinkBtn').addEventListener('click', () => {
+  const owner = el('cfgOwner').value.trim();
+  if (!owner) return;
+  const repoAdi = el('cfgRepo').value.trim();
+  window.open(tokenOlusturmaLinkiUret(owner, repoAdi), '_blank');
+});
+
 el('cfgKaydet').addEventListener('click', () => {
   CFG = {
     owner: el('cfgOwner').value.trim(),
@@ -266,6 +300,12 @@ const bullBtn = document.createElement('button');
 bullBtn.textContent = '25';
 bullBtn.addEventListener('click', () => atisIsle(25, AKTIF_CARPAN));
 numpad.appendChild(bullBtn);
+
+const iskaBtn = document.createElement('button');
+iskaBtn.textContent = 'Iska';
+iskaBtn.style.gridColumn = 'span 2';
+iskaBtn.addEventListener('click', () => atisIsle(0, 1));
+numpad.appendChild(iskaBtn);
 
 async function atisIsle(deger, carpan) {
   if (!OYUN || OYUN.state.bitti) return;

@@ -15,15 +15,21 @@
 
 <!-- YAPILANDIRMA EKRANI -->
 <section id="config-screen" class="card">
-  <h2>Lig bağlantısı</h2>
-  <p class="hint">Bu lig için oluşturulmuş GitHub deposunun bilgilerini gir. Token, sadece bu depoda issue açma/düzenleme izni olan bir "fine-grained personal access token" olmalı.</p>
+  <h2>Yeni lig aç</h2>
+  <p class="hint">1) Önce bu şablondan kendi ligin için bir depo oluştur.</p>
+  <button id="templateBtn" type="button">🆕 Kendi lig deponu oluştur (GitHub'da açılır)</button>
+
+  <p class="hint" style="margin-top:16px">2) Sonra o deponun bilgilerini aşağıya gir.</p>
   <label>GitHub kullanıcı adı / organizasyon
     <input id="cfgOwner" type="text" placeholder="orn: faith-dev">
   </label>
   <label>Depo adı
     <input id="cfgRepo" type="text" placeholder="orn: cuma-dart-ligi">
   </label>
-  <label>Personal Access Token
+
+  <p class="hint" style="margin-top:16px">3) Bu depoya özel, izinleri hazır ayarlanmış bir token oluştur (kullanıcı adını yukarı girince buton aktif olur).</p>
+  <button id="tokenLinkBtn" type="button" disabled>🔑 İzinleri hazır token oluştur (GitHub'da açılır)</button>
+  <label style="margin-top:10px">Oluşturduğun token'ı buraya yapıştır
     <input id="cfgToken" type="password" placeholder="github_pat_...">
   </label>
   <button id="cfgKaydet">Bağlan ve kaydet</button>

@@ -23,14 +23,16 @@ function createDartGame(baslangicSkor, oyuncu1, oyuncu2) {
     state.turBaslangicSkoru = state.skorlar[state.aktif];
   }
 
-  // deger: 1-20 veya 25 (bull). carpan: 1 (tekli), 2 (duble), 3 (triple)
-  // Not: 25 icin sadece carpan 1 (tek bull=25) veya 2 (cift bull=50) gecerlidir.
+  // deger: 1-20, 25 (bull), veya 0 (ıska — tahtaya hiç değmedi)
+  // carpan: 1 (tekli), 2 (duble), 3 (triple). Iska'da carpan'ın etkisi yok.
   function atisYap(deger, carpan) {
     if (state.bitti) return { hata: 'Maç zaten bitti.' };
     if (state.turAtislari.length >= 3) return { hata: 'Bu turda 3 atış hakkı doldu.' };
 
     let puan;
-    if (deger === 25) {
+    if (deger === 0) {
+      puan = 0; // ıska
+    } else if (deger === 25) {
       puan = carpan === 2 ? 50 : 25;
     } else {
       puan = deger * carpan;
@@ -58,7 +60,9 @@ function createDartGame(baslangicSkor, oyuncu1, oyuncu2) {
       return { bitti: true, kazanan: oyuncu, mesaj: `${isimler[oyuncu]} maçı kazandı!` };
     }
 
-    const mesaj = `${isimler[oyuncu]} attı: ${puan} puan (kalan ${kalan})`;
+    const mesaj = deger === 0
+      ? `${isimler[oyuncu]} ıska geçti (kalan ${kalan})`
+      : `${isimler[oyuncu]} attı: ${puan} puan (kalan ${kalan})`;
 
     if (state.turAtislari.length === 3) {
       turuBitirVeGecis();
